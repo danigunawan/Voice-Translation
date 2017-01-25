@@ -1,0 +1,52 @@
+<div class='row'>
+  <table class='table table-bordered table-striped'>
+    <thead>
+      <tr>
+        <th>Keywords</th>
+        <th>Response</th>
+        <th>Language</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @commands.each do |command|%>
+        <tr>
+          <td><%= command.keywords %></td>
+          <td><%= command.response %></td>
+          <td><%= command.language %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+<div class='row'>
+  <div class='pull-right'>
+    Translation Language:
+    <%= select("language", 'options', @languages) %>
+  </div>
+  <div class='pull-left'>
+    Recognition language:
+    <%= select("recognition", 'options', @recognitions) %>
+  </div>
+  <div class='clear-fix'>
+  <div>
+  <p class="hints">
+    <textarea id='input'></textarea><br/>
+    <button type='button' id='speak' class='btn btn-primary center-block' data-click='off'>Speak</button>
+  </p>
+  </div>
+  <div id='results'>
+  </div>
+</div>
+<div class='row'>
+  Create Command:
+  <%= form_for @command, method: :post do |f|%>
+    <div>
+      <%= f.text_area :keywords %>
+    </div>
+    <div>
+      <%= f.text_area :response %>
+    </div>
+    <%= f.hidden_field :language %>
+    <%= f.submit "Save Command" %>
+  <% end %>
+</div>
