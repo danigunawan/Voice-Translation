@@ -5,6 +5,12 @@ class CommandsController < ApplicationController
     redirect_to root_path
   end
 
+  def destroy
+    command = Command.find(params[:id])
+    command.destroy
+    redirect_to root_path
+  end
+
   private
 
   def command_params

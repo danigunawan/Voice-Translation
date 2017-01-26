@@ -4,7 +4,8 @@
       <tr>
         <th>Keywords</th>
         <th>Response</th>
-        <th>Language</th>
+        <th>Translation Language</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -13,6 +14,7 @@
           <td><%= command.keywords %></td>
           <td><%= command.response %></td>
           <td><%= command.language %></td>
+          <td><%= link_to 'Destroy', command, class: 'btn btn-danger', method: :delete %></td>
         </tr>
       <% end %>
     </tbody>
@@ -41,9 +43,11 @@
   Create Command:
   <%= form_for @command, method: :post do |f|%>
     <div>
+      <%= f.label :keywords %>
       <%= f.text_area :keywords %>
     </div>
     <div>
+      <%= f.label :response %>
       <%= f.text_area :response %>
     </div>
     <%= f.hidden_field :language %>

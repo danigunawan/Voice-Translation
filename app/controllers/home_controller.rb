@@ -6,7 +6,7 @@ class HomeController < ApplicationController
 
   def index
     @languages = [['English','en'], ['Tagalog','tl'], ['Japanese','ja']]
-    @recognitions = [['English','en-US'], ['Japanese','ja']]
+    @recognitions = [['English','en-US'], ['Filipino','fil-PH'], ['Japanese','ja']]
     @commands = Command.all
     @command = Command.new
   end

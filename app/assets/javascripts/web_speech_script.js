@@ -14,7 +14,7 @@ $(document).ready(function(){
     recognition.grammars = speechRecognitionList;
     recognition.continuous = true;
 
-    // recognition.lang change languages (English: en-US, Japanese: ja, Filipino: *no* *1124*)
+    // recognition.lang change languages (English: en-US, Japanese: ja, Filipino: *fil-PH*)
 
     recognition.lang = 'en-US';
     recognition.interimResults = false;
