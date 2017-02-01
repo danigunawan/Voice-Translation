@@ -13,11 +13,11 @@
 ActiveRecord::Schema.define(version: 20170125051009) do
 
   create_table "commands", force: :cascade do |t|
-    t.string   "keywords"
-    t.string   "response"
-    t.string   "language"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.text     "keywords"
+    t.string   "description"
+    t.text     "response"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
 end

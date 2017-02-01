@@ -1,24 +1,5 @@
-<div class='row'>
-  <table class='table table-bordered table-striped'>
-    <thead>
-      <tr>
-        <th>Keywords</th>
-        <th>Response</th>
-        <th>Translation Language</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @commands.each do |command|%>
-        <tr>
-          <td><%= command.keywords %></td>
-          <td><%= command.response %></td>
-          <td><%= command.language %></td>
-          <td><%= link_to 'Destroy', command, class: 'btn btn-danger', method: :delete %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+<div id='command-table'>
+<%= render partial: 'command_table', locals: {commands: @commands} %>
 </div>
 <div class='row'>
   <div class='pull-right'>
@@ -26,31 +7,18 @@
     <%= select("language", 'options', @languages) %>
   </div>
   <div class='pull-left'>
-    Recognition language:
-    <%= select("recognition", 'options', @recognitions) %>
+    Voice Recognition language:
+    <%= select("recognition", 'options', @languages) %>
   </div>
-  <div class='clear-fix'>
+  <div class='clear-fix'><div><br/><br/>
   <div>
-  <p class="hints">
-    <textarea id='input'></textarea><br/>
-    <button type='button' id='speak' class='btn btn-primary center-block' data-click='off'>Speak</button>
-  </p>
+    <p class="hints">
+      <textarea id='input' class='form-control' rows='10'></textarea><br/>
+      <button type='button' id='speak' class='btn btn-primary center-block' data-click='off'>Start Speaking</button>
+    </p>
+  </div>
   </div>
   <div id='results'>
   </div>
 </div>
-<div class='row'>
-  Create Command:
-  <%= form_for @command, method: :post do |f|%>
-    <div>
-      <%= f.label :keywords %>
-      <%= f.text_area :keywords %>
-    </div>
-    <div>
-      <%= f.label :response %>
-      <%= f.text_area :response %>
-    </div>
-    <%= f.hidden_field :language %>
-    <%= f.submit "Save Command" %>
-  <% end %>
-</div>
+<%= render partial: 'command_form', locals: {command: @command} %>

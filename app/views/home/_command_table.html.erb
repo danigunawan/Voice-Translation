@@ -1,0 +1,22 @@
+<div class='row'>
+  <table class='table table-bordered table-striped'>
+    <thead>
+      <tr>
+        <th>Keywords</th>
+        <th>Description</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if @commands.present? %>
+        <% commands.each do |command|%>
+          <tr>
+            <td><%= command.keywords %></td>
+            <td><%= command.description %></td>
+            <td><%= link_to 'Destroy', command, class: 'btn btn-danger', method: :delete, remote: true %></td>
+          </tr>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+</div>

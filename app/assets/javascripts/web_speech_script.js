@@ -16,64 +16,62 @@ $(document).ready(function(){
 
     // recognition.lang change languages (English: en-US, Japanese: ja, Filipino: *fil-PH*)
 
-    recognition.lang = 'en-US';
+    recognition.lang = 'en';
     recognition.interimResults = false;
     recognition.maxAlternatives = 1;
 
     recognition.onresult = function(event) {
-              //
-              // The SpeechRecognitionEvent results property returns a SpeechRecognitionResultList object
-              // The SpeechRecognitionResultList object contains SpeechRecognitionResult objects.
-              // It has a getter so it can be accessed like an array
-              // The [last] returns the SpeechRecognitionResult at the last position.
-              // Each SpeechRecognitionResult object contains SpeechRecognitionAlternative objects that contain individual results.
-              // These also have getters so they can be accessed like arrays.
-              // The [0] returns the SpeechRecognitionAlternative at position 0.
-              // We then return the transcript property of the SpeechRecognitionAlternative object
         var last = event.results.length - 1;
-        var received_speech = event.results[last][0].transcript;
-              // diagnostic.textContent = 'Result received: ' + color + '.';
-              // bg.style.backgroundColor = color;
-              // responsiveVoice.speak(color);
-        output = output + " " + received_speech
+        output = event.results[last][0].transcript;
         user_input = output
         recognition.stop();
-        // console.log('Confidence: ' + event.results[0][0].confidence);
     }
 
     recognition.onend = function() {
-      // responsiveVoice.speak("We are no longer recording");
       user_input = output
       $.ajax({
         type: 'get',
         url: '/translate',
         data: {
           input: output,
-          language: chosen_language
+          language: recognition.lang + "-" + chosen_language
         },
         dataType: "json",
         success: function(result){
           if(result['code'] == 200 && result['text'][0].length > 0){
-            if(result['lang'].length > 0){
-              chosen_language == result['lang']
+            if(result['type'] == 'command'){
+              try{
+                eval(result['text'][0]);
+              }catch(err){
+                responsiveVoice.speak("There was an error in the execution");
+              }
+            }else{
+              if(result['lang'].length > 0){
+                chosen_language == result['lang'].slice(-2);
+              }
+              if(chosen_language == 'ja' ){
+                responsiveVoice.speak(result['text'][0], 'Japanese Female');
+              }else if (chosen_language == 'en') {
+                responsiveVoice.speak(result['text'][0]);
+              }
+              else{
+                responsiveVoice.speak(result['text'][0]);
+              }
+              $('#command_keywords').val(user_input);
+              $('#command_response').val(result['text'][0]);
+              $('#command_language').val(chosen_language);
             }
-            if(chosen_language == 'ja' ){
-              responsiveVoice.speak(result['text'][0], 'Japanese Female');
-            }else if (chosen_language == 'en') {
-              responsiveVoice.speak(result['text'][0]);
-            }
-            else{
-              responsiveVoice.speak(result['text'][0]);
-            }
-            $('#command_keywords').val(user_input);
-            $('#command_response').val(result['text'][0]);
-            $('#command_language').val(chosen_language);
+            console.log(chosen_language)
           }else if (result['code'] !== '200' ){
-            responsiveVoice.speak(result['message'])
+            if(typeof result['message'] !== 'undefined' && result['message'].length > 0){
+              responsiveVoice.speak(result['message'])
+            }else{
+              responsiveVoice.speak("I didn't recognize what you said.");
+            }
           }
         }
       });
-      recognition.stop();
+      $('#speak').text("Start Speaking")
     }
 
     recognition.onnomatch = function(event) {
@@ -103,32 +101,42 @@ $(document).ready(function(){
             url: '/translate',
             data: {
               input: output,
-              language: chosen_language
+              language: recognition.lang + "-" + chosen_language
             },
             dataType: "json",
             success: function(result){
               if(result['code'] == 200 && result['text'][0].length > 0){
-                if(result['lang'].length > 0){
-                  chosen_language == result['lang']
+                if(result['type'] == 'command'){
+                  eval(result['text'][0])
+                }else{
+                  if(result['lang'].length > 0){
+                    chosen_language == result['lang'].slice(-2)
+                  }
+                  if(chosen_language == 'ja' ){
+                    responsiveVoice.speak(result['text'][0], 'Japanese Female');
+                  }else if (chosen_language == 'en') {
+                    responsiveVoice.speak(result['text'][0]);
+                  }
+                  else{
+                    responsiveVoice.speak(result['text'][0]);
+                  }
+                  $('#command_keywords').val(user_input);
+                  $('#command_response').val(result['text'][0]);
+                  $('#command_language').val(chosen_language);
                 }
-                if(chosen_language == 'ja' ){
-                  responsiveVoice.speak(result['text'][0], 'Japanese Female');
-                }else if (chosen_language == 'en') {
-                  responsiveVoice.speak(result['text'][0]);
-                }
-                else{
-                  responsiveVoice.speak(result['text'][0]);
-                }
-                $('#command_keywords').val(user_input);
-                $('#command_response').val(result['text'][0]);
-                $('#command_language').val(chosen_language);
+                console.log(chosen_language)
               }else if (result['code'] !== '200' ){
-                responsiveVoice.speak(result['message'])
+                if(typeof result['message'] !== 'undefined' && result['message'].length > 0){
+                  responsiveVoice.speak(result['message'])
+                }else{
+                  responsiveVoice.speak("I didn't recognize what you said.");
+                }
               }
             }
           });
         }else{
           output = ""
+          $(this).text("Stop Speaking")
           recognition.start();
         }
         $(this).data('click', 'on');
